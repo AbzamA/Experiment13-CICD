@@ -1,5 +1,8 @@
 
 pipeline {
+    triggers {
+    pollSCM('H/1 * * * *')
+}
     agent any
 
     environment {
@@ -7,11 +10,16 @@ pipeline {
         CONTAINER_NAME = 'experiment13-container'
     }
 
+    options {
+        skipDefaultCheckout(true)
+    }
+
     stages {
 
         stage('Checkout') {
             steps {
-                echo 'Downloading source code from GitHub'
+                echo 'Checking out source code from GitHub'
+                deleteDir()
 
                 git branch: 'main',
                     url: 'https://github.com/AbzamA/Experiment13-CICD.git'
@@ -20,25 +28,22 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo 'Building Docker Image'
-
+                echo 'Building Docker image'
                 sh 'docker build -t experiment13-web .'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Testing website files'
-
+                echo 'Testing website'
                 sh 'test -f index.html'
-                sh 'echo Website test passed'
+                echo 'Website test passed'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Deploying website using Docker'
-
+                echo 'Deploying website'
                 sh 'docker rm -f experiment13-container || true'
                 sh 'docker run -d --name experiment13-container -p 8082:80 experiment13-web'
             }
@@ -47,11 +52,11 @@ pipeline {
 
     post {
         success {
-            echo 'CI/CD Pipeline completed successfully!'
+            echo 'Experiment 13 CI/CD Pipeline completed successfully!'
         }
 
         failure {
-            echo 'CI/CD Pipeline failed. Check the console output.'
+            echo 'Pipeline failed. Check the failed stage.'
         }
     }
 }
