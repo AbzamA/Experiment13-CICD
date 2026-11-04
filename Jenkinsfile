@@ -12,14 +12,16 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Downloading source code from GitHub'
+
                 git branch: 'main',
-                    url: 'https://github.c.com/AbzamA/Experiment13-CICD.git'
+                    url: 'https://github.com/AbzamA/Experiment13-CICD.git'
             }
         }
 
         stage('Build') {
             steps {
                 echo 'Building Docker Image'
+
                 sh 'docker build -t experiment13-web .'
             }
         }
@@ -27,6 +29,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing website files'
+
                 sh 'test -f index.html'
                 sh 'echo Website test passed'
             }
@@ -35,6 +38,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying website using Docker'
+
                 sh 'docker rm -f experiment13-container || true'
                 sh 'docker run -d --name experiment13-container -p 8082:80 experiment13-web'
             }
