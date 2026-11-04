@@ -13,7 +13,7 @@ pipeline {
             steps {
                 echo 'Downloading source code from GitHub'
                 git branch: 'main',
-                    url: 'https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git'
+                    url: 'https://github.c.com/AbzamA/Experiment13-CICD.git'
             }
         }
 
